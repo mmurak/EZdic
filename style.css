@@ -1,0 +1,43 @@
+body, html {
+  font-family: 'Helvetica Neue', 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif;
+  font-size: 20px;
+}
+.h1 {
+  font-size: 1.5em;
+  color: #333;
+  font-weight: 700;
+  float: left;
+}
+
+.content {
+  cursor: pointer;
+  position: relative;
+  margin: 30px;
+}
+
+.resizedimage {
+  z-index: 0;
+}
+
+.resizedimage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fullsizedimage {
+  position: absolute;
+  opacity: 0;
+  width: 700px;
+  height: 400px;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 0%;
+  border: solid 5px #ffffff;
+  z-index: 1;
+}
+
+.fsimage {
+  position: absolute;
+  transform-origin: top left;
+}
