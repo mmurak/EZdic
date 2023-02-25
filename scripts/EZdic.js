@@ -165,9 +165,10 @@ function loadImage(pno) {
 function getIndex(targetEntry) {
     let target = targetEntry.trim().toLowerCase();
     target = target.replaceAll(/[^a-z]/g, "");
+    if (target == "") return;
     for (let i = 0; i < indexData[1].length; i++) {
         if (indexData[1][i][0] > target) {
-            return indexData[1][i][1] - 1;
+            return indexData[1][i-1][1];
         } else if (indexData[1][i][0] == target) {
             return indexData[1][i][1];
         }
