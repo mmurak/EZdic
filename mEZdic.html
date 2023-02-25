@@ -9,6 +9,10 @@
             font-size: 150%;
             width: 100%;
         }
+        .hist-field{
+            font-size: 150%;
+            width: 100%;
+        }
         .entry-field{
             font-size: 200%;
             width: 100%;
@@ -33,7 +37,8 @@
     <body>
         <h1>熟語本位 英和中辭典（昭和5年版）</h1>
         <div style="float: right">/Vade Mecum/</div>
-        <select class="toc-field" id="TOCSel" onchange="tocChange(this.value);"/>
+        <select class="toc-field" id="TOCSel" onchange="tocChange(this.value);"></select><br/>
+        <select class="hist-field" id="HISTSel" onchange="historySearch(this.value);"></select>
         <input type="text" id="EntryField" class="entry-field"/><br/>
         <input type="button" id="SearchButton" class="buttons" value="検索（Enter）" onclick="search();"/>
         <input type="button" id="clearButton" class="buttons" value="クリア" onclick="clearField();"/>
@@ -42,16 +47,22 @@
             class GlobalManager {
                 constructor() {
                     this.tocSel = document.getElementById("TOCSel");
+                    this.histSel = document.getElementById("HISTSel");
                     this.entryField = document.getElementById("EntryField");
                     this.searchButton = document.getElementById("SearchButton");
                     this.clearButton = document.getElementById("clearButton");
                     this.baseURL = "https://dl.ndl.go.jp/pid/1679475/1/";
+                    this.historyID = "mEZdicHistory";
+                    this.historyMax = 10;
                 }
             }
 
             const G = new GlobalManager();
 
-            G.tocSel.appendChild(document.createElement("option"));
+            const topLabelElement = document.createElement("option");
+            topLabelElement.text = "−前付および後付−";
+            topLabelElement.value = -1;
+            G.tocSel.appendChild(topLabelElement);
             for (let i = 0; i < indexData[0].length; i++) {
                 let name = indexData[0][i][0];
                 let val = indexData[0][i][1]
@@ -68,6 +79,8 @@
                 elem.value = val;
                 G.tocSel.appendChild(elem);
             }
+            let lsh = historyFromLocalStorage();
+            loadHistory(lsh);
             G.entryField.focus();
             document.addEventListener("keyup", function(evt) {
                 if (evt.key == "Enter") {
@@ -97,13 +110,23 @@
 
             function search() {
                 G.tocSel.selectedIndex = 0;
-                let pno = getIndex(G.entryField.value);
+                let targetEntry = G.entryField.value;
+                let pno = getIndex(targetEntry);
                 if (pno >= 1) {
                     windowOpen(pno);
                 }
+                let lsh = historyFromLocalStorage();
+                lsh = lsh.filter(function(val) {
+                    return val != targetEntry;
+                });
+                lsh.unshift(targetEntry);
+                lsh = lsh.slice(0, G.historyMax);
+                loadHistory(lsh)
+                localStorage.setItem(G.historyID, JSON.stringify(lsh));
             }
 
             function tocChange(val) {
+                if (G.tocSel.selectedIndex == -1)  return;
                 windowOpen(G.tocSel[G.tocSel.selectedIndex].value);
                 clearField();
             }
@@ -113,6 +136,37 @@
                 G.entryField.value = "";
                 G.entryField.focus();
             }
+
+            function historyFromLocalStorage() {
+                let lsh = localStorage.getItem(G.historyID);
+                if (lsh == null) {
+                    lsh = [];
+                } else {
+                    lsh = JSON.parse(lsh);
+                }
+                return lsh;
+            }
+
+            function loadHistory(lsh) {
+                while (G.histSel.lastChild) {
+                    G.histSel.removeChild(G.histSel.lastElementChild);
+                }
+                let harray = ["−検索履歴−"].concat(lsh);
+                for (let hentry of harray) {
+                    let elem = document.createElement("option");
+                    elem.text = hentry;
+                    elem.value = hentry;
+                    G.histSel.appendChild(elem);
+                }
+            }
+
+            function historySearch(val) {
+                if (val == "−検索履歴−")  return;
+                G.entryField.value = val;
+                search();
+            }
+
+
         </script>
     </body>
 </html>
