@@ -32,6 +32,14 @@
 						box-shadow: inset 0 0 2px rgba(128, 128, 128, 0.1);
 						transform: translateY(2px);
 				}
+				.footer{
+					position: fixed;
+					bottom: 0;
+					left: 0;
+					width: 100%;
+					background-color: lightgray;
+					text-align: center;
+				}
 		</style>
 		</head>
 		<body>
@@ -41,6 +49,9 @@
 				<input type="text" id="EntryField" class="entry-field" placeholder="ローマ字で入力"/><br/>
 				<input type="button" id="SearchButton" class="buttons" value="検索（Enter）" onclick="search();"/>
 				<input type="button" id="clearButton" class="buttons" value="クリア（Escape）" onclick="clearField();"/>
+				<div class="footer">
+				使用するには国立国会図書館デジタルコレクションの<a href="https://www.ndl.go.jp/jp/use/digital_transmission/individuals_index.html">個人向けデジタル化資料送信サービス</a>に登録、ログインしておく必要があります。
+				</div>
 				<script src="./indexStorage/saitoJE-NDL.js"></script>
 				<script>
 class GlobalManager {
