@@ -41,7 +41,7 @@
         <select class="hist-field" id="HISTSel" onchange="historySearch(this.value);"></select>
         <input type="text" id="EntryField" class="entry-field"/><br/>
         <input type="button" id="SearchButton" class="buttons" value="検索（Enter）" onclick="search();"/>
-        <input type="button" id="clearButton" class="buttons" value="クリア" onclick="clearField();"/>
+        <input type="button" id="clearButton" class="buttons" value="クリア（Escape）" onclick="clearField();"/>
         <script src="./indexStorage/Saito's idiomological English-Japanese dictionary = 熟語本位英和中辭典_noBundleName.js"></script>
         <script>
             class GlobalManager {
@@ -85,6 +85,8 @@
             document.addEventListener("keyup", function(evt) {
                 if (evt.key == "Enter") {
                     search();
+                } else if (evt.key == "Escape") {
+                    clearField();
                 }
             }, false);
 
